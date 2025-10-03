@@ -25,6 +25,8 @@ export const ProjectSummary = ({
   model,
   buttonText,
   buttonLink,
+  secondaryButtonText, // New prop
+  secondaryButtonLink, // New prop
   alternate,
   ...rest
 }) => {
@@ -83,6 +85,17 @@ export const ProjectSummary = ({
         <Button iconHoverShift href={buttonLink} iconEnd="arrowRight">
           {buttonText}
         </Button>
+        {secondaryButtonText && secondaryButtonLink && (
+          <Button
+            iconHoverShift
+            href={secondaryButtonLink}
+            iconEnd="arrowRight"
+            style={{ marginLeft: '20px' }}
+            secondary // Use `secondary` prop for alignment with Button styles
+          >
+            {secondaryButtonText}
+          </Button>
+        )}
       </div>
     </div>
   );
