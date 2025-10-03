@@ -20,7 +20,7 @@ export const navLinks = [
 export const socialLinks = [
   {
     label: 'LinkedIn',
-    url: 'https://fr.linkedin.com/in/rami-badr-27143a305',
+    url: 'https://www.linkedin.com/in/ramibadr/',
     icon: 'linkedin',
   },
   {
