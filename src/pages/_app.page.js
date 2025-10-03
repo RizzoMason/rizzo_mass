@@ -56,7 +56,7 @@ const App = ({ Component, pageProps }) => {
             </VisuallyHidden>
             <Navbar />
             <main className={styles.app} tabIndex={-1} id="MainContent">
-              <AnimatePresence exitBeforeEnter>
+              <AnimatePresence mode="wait">
                 <m.div
                   key={route}
                   className={styles.page}
