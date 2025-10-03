@@ -1,3 +1,27 @@
 .home {
   overflow-x: hidden;
 }
+
+/* Overlap styling for details/profile section */
+.detailsAnchor {
+  position: relative;
+  height: 0;
+  margin-top: -6rem; /* pulls following profile upward */
+}
+
+.profileOverlapWrapper {
+  position: relative;
+  z-index: 2; /* above background elements from previous summaries */
+  margin-top: -4rem; /* fine tune vertical overlap */
+  padding-top: 4rem; /* preserve internal spacing so content not clipped */
+}
+
+@media (max-width: 900px) {
+  .detailsAnchor {
+    margin-top: -3rem;
+  }
+  .profileOverlapWrapper {
+    margin-top: -2rem;
+    padding-top: 3rem;
+  }
+}
