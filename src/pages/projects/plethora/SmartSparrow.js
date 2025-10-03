@@ -6,13 +6,12 @@ import imageSprLessonBuilderDarkLarge from 'assets/pleth.png';
 import imageSprLessonBuilderDarkPlaceholder from 'assets/pleth.png';
 import imageSprLessonBuilderDark from 'assets/pleth.png';
 
-
 import imageSprLessonBuilderLightLarge from 'assets/spr-lesson-builder-light-large.jpg';
 import imageSprLessonBuilderLightPlaceholder from 'assets/spr-lesson-builder-light-placeholder.jpg';
 import imageSprLessonBuilderLight from 'assets/spr-lesson-builder-light.jpg';
 import { Footer } from 'components/Footer';
 import { Meta } from 'components/Meta';
-import {  useTheme } from 'components/ThemeProvider';
+import { useTheme } from 'components/ThemeProvider';
 import {
   ProjectBackground,
   ProjectContainer,
@@ -24,21 +23,15 @@ import {
 import { Fragment } from 'react';
 import { media } from 'utils/style';
 
-
 const title = 'Plethora';
 const description =
   'Turn audio & videos into notes, flashcards, quizzes, conversations and more.';
-const roles = [
-  'Record Lectures',
-  'Instant Notes',
-  'Chat with your notes',
-];
+const roles = ['Record Lectures', 'Instant Notes', 'Chat with your notes'];
 
 export const SmartSparrow = () => {
   const { themeId } = useTheme();
 
   const isDark = themeId === 'dark';
-
 
   return (
     <Fragment>
@@ -53,7 +46,7 @@ export const SmartSparrow = () => {
         <ProjectHeader
           title={title}
           description={description}
-          url="https://plethora.lol/"
+          url="https://plethora.buildfast.us"
           roles={roles}
         />
         <ProjectSection padding="top">
@@ -76,8 +69,6 @@ export const SmartSparrow = () => {
             />
           </ProjectSectionContent>
         </ProjectSection>
-     
-    
       </ProjectContainer>
       <Footer />
     </Fragment>
