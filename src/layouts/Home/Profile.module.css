@@ -1,10 +1,9 @@
 .profile {
   width: 100vw;
-  min-height: 100vh;
-  margin-top: 60px;
-  margin-bottom: 40px;
-  padding-top: 60px;
-  padding-bottom: 40px;
+  margin-top: 10px; /* Further reduced top margin */
+  margin-bottom: 10px; /* Further reduced bottom margin */
+  padding-top: 20px; /* Further adjusted padding */
+  padding-bottom: 10px; /* Further adjusted padding */
   display: flex;
   justify-content: center;
 
@@ -78,8 +77,8 @@
 }
 
 .tag {
-  margin-top: 220px;
-  margin-bottom: 40px;
+  margin-top: 10px; /* Further reduced spacing */
+  margin-bottom: 10px; /* Further reduced spacing */
   display: grid;
   grid-template-columns: var(--space4XL) 1fr;
   gap: 12px;
