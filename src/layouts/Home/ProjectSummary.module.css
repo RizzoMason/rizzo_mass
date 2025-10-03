@@ -266,3 +266,17 @@
     opacity: 1;
   }
 }
+
+.secondaryButton {
+  margin-left: var(--spaceXL); /* Move it further to the right */
+  background-color: var(--colorGrey); /* Grey background */
+  color: var(--colorText); /* Ensure text is visible */
+  border: none;
+  padding: var(--spaceS) var(--spaceM);
+  border-radius: var(--borderRadius);
+  transition: background-color 0.3s ease;
+}
+
+.secondaryButton:hover {
+  background-color: transparent !important; /* Darker grey on hover */
+}
