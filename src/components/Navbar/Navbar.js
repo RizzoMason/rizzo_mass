@@ -148,7 +148,7 @@ export const Navbar = () => {
           aria-label="Rami Badr "
           onClick={handleMobileNavClick}
         >
-          <Monogram highlight />
+          <Monogram data-align size={64} />
         </a>
       </RouterLink>
       <NavToggle onClick={() => dispatch({ type: 'toggleMenu' })} menuOpen={menuOpen} />
