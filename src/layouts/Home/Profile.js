@@ -1,10 +1,8 @@
 import profileKatakana from 'assets/katakana-profile.svg?url';
 
-
 import profileImgLarge from 'assets/badr.jpg';
 import profileImgPlaceholder from 'assets/badr.jpg';
 import profileImg from 'assets/badr.jpg';
-
 
 import { Button } from 'components/Button';
 import { DecoderText } from 'components/DecoderText';
@@ -25,14 +23,18 @@ const ProfileText = ({ visible, titleId }) => (
       <DecoderText text="Who ?" start={visible} delay={500} />
     </Heading>
     <Text className={styles.description} data-visible={visible} size="l" as="p">
-      I’m Badr, an ambitious teen driven by hard work and consistency. My most recent project, {' '}
-      <Link href="https://plethora.lol/">Plethora</Link>, aims to facilitate common pain points as seen in the education sphere.
+      I'm Badr, a driven entrepreneur, music producer, and developer who turns ambitious
+      visions into reality. My specialty? Helping businesses get their idea to market fast
+      and efficiently.
     </Text>
     <Text className={styles.description} data-visible={visible} size="l" as="p">
-      In my spare time, I play sports, such as soccer, swimming & volleyball. I also workout & make music from time to time.{' '}
+      When I'm not building the next big thing, I'm either on the field or in the pool. I
+      also produce beats from time to time, because excellence isn't limited to one
+      domain.
     </Text>
     <Text className={styles.description} data-visible={visible} size="l" as="p">
-      If you have any collaboration, partnership or any kind of inquiries, then you can contact me below.{' '}
+      Ready to work with someone who delivers results? Let's connect and create something
+      great together.
     </Text>
   </Fragment>
 );
@@ -47,7 +49,6 @@ export const Profile = ({ id, visible, sectionRef }) => {
       onFocus={() => setFocused(true)}
       onBlur={() => setFocused(false)}
       as="section"
-      id={id}
       ref={sectionRef}
       aria-labelledby={titleId}
       tabIndex={-1}
@@ -57,15 +58,6 @@ export const Profile = ({ id, visible, sectionRef }) => {
           <div className={styles.content}>
             <div className={styles.column}>
               <ProfileText visible={visible} titleId={titleId} />
-              <Button
-                secondary
-                className={styles.button}
-                data-visible={visible}
-                href="mailto:business@badr.lol"
-                icon="send"
-              >
-                Send me a message
-              </Button>
             </div>
             <div className={styles.column}>
               <div className={styles.tag} aria-hidden>
@@ -80,14 +72,6 @@ export const Profile = ({ id, visible, sectionRef }) => {
                 </div>
               </div>
               <div className={styles.image}>
-                <Image
-                alt="Rami Badr"
-                  reveal
-                  delay={100}
-                  placeholder={profileImgPlaceholder}
-                  srcSet={[profileImg, profileImgLarge]}
-                  sizes={`(max-width: ${media.mobile}px) 100vw, 480px`}
-                />
                 <svg
                   aria-hidden="true"
                   width="135"
