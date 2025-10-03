@@ -9,14 +9,12 @@ export const navLinks = [
   },
   {
     label: 'Contact',
-    pathname: 'mailto:business@badr.lol',
+    pathname: '/#contact',
   },
   // {
   //   label: 'Contact',
   //   pathname: '/contact',
   // },
- 
- 
 ];
 
 export const socialLinks = [
