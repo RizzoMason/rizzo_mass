@@ -9,73 +9,167 @@ import { Section } from 'components/Section';
 import { Text } from 'components/Text';
 import { tokens } from 'components/ThemeProvider/theme';
 import { Transition } from 'components/Transition';
-import { useFormInput } from 'hooks';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { cssProps, msToNum, numToMs } from 'utils/style';
 import styles from './Contact.module.css';
-import emailjs from '@emailjs/browser';
 
 export const Contact = () => {
   const form = useRef();
-  // const errorRef = useRef();
-  const email = useFormInput('');
-  const message = useFormInput('');
-
   const [sending, setSending] = useState(false);
   const [complete, setComplete] = useState(false);
-  // const [statusError, setStatusError] = useState('');
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: '',
+  });
+  const [turnstileToken, setTurnstileToken] = useState('');
+  const [status, setStatus] = useState('');
+  const turnstileRef = useRef(null);
   const initDelay = tokens.base.durationS;
+
+  // Load & render Turnstile widget (manual render to avoid duplicate auto-renders / error 600010)
+  const widgetIdRef = useRef(null);
+  useEffect(() => {
+    const TURNSTILE_SRC = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+    const envSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+    const fallbackKey = '0x4AAAAAAB4knujxF877PWoI';
+
+    const renderWidget = () => {
+      if (!window.turnstile || !turnstileRef.current || widgetIdRef.current) return;
+      try {
+        // Prefer explicit data-sitekey on the element (string), fallback to env or fallbackKey
+        let siteKey =
+          turnstileRef.current.getAttribute('data-sitekey') || envSiteKey || fallbackKey;
+        if (typeof siteKey !== 'string') {
+          console.warn('Turnstile siteKey not a string, coercing to string', siteKey);
+          siteKey = String(siteKey);
+        }
+
+        // debug
+        // console.debug('Initializing Turnstile with siteKey:', typeof siteKey, siteKey);
+
+        widgetIdRef.current = window.turnstile.render(turnstileRef.current, {
+          sitekey: siteKey,
+          theme: 'auto',
+          callback: token => {
+            setTurnstileToken(token);
+            console.log('Verification completed ✅');
+          },
+          'error-callback': () => {
+            console.log('Turnstile failed to load. Please reload the page.');
+          },
+          'expired-callback': () => {
+            setTurnstileToken('');
+            console.log('Verification expired. Please verify again.');
+          },
+        });
+      } catch (err) {
+        console.error('Turnstile render error', err);
+        console.log('Unable to initialize verification.');
+      }
+    };
+
+    // If script already present, just render
+    if (document.querySelector(`script[src="${TURNSTILE_SRC}"]`)) {
+      if (window.turnstile) {
+        renderWidget();
+      } else {
+        // Wait a bit for script parse
+        const id = setInterval(() => {
+          if (window.turnstile) {
+            clearInterval(id);
+            renderWidget();
+          }
+        }, 50);
+        setTimeout(() => clearInterval(id), 5000);
+      }
+      return;
+    }
+
+    // Inject script
+    const script = document.createElement('script');
+    script.src = TURNSTILE_SRC;
+    script.async = true;
+    script.defer = true;
+    script.onload = renderWidget;
+    script.onerror = () => setStatus('Failed to load Turnstile script.');
+    document.head.appendChild(script);
+
+    // No cleanup removing script to allow caching across navigations
+  }, []);
+
+  // Reset Turnstile widget after successful submission
+  useEffect(() => {
+    if (complete && window.turnstile && widgetIdRef.current !== null) {
+      try {
+        window.turnstile.reset(widgetIdRef.current);
+        setTurnstileToken('');
+        setStatus('');
+      } catch (e) {
+        console.warn('Unable to reset Turnstile widget', e);
+      }
+    }
+  }, [complete]);
 
   const onSubmit = async event => {
     event.preventDefault();
-    // setStatusError('');
+    console.log('Form submitted:', formData, turnstileToken);
 
     if (sending) return;
 
+    if (!turnstileToken) {
+      setStatus('Please complete the Turnstile verification.');
+      console.log('Please complete the Turnstile verification.');
+      return;
+    }
+
     try {
       setSending(true);
+      console.log('Submitting...');
 
-      // const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/message`, {
-      //   method: 'POST',
-      //   mode: 'cors',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({
-      //     email: email.value,
-      //     message: message.value,
-      //   }),
-      // });
-      // console.log(form.current);
-      emailjs.sendForm('service_key', 'template_key', form.current, 'form').then(res => {
-        // setSenderEmail('');
-        // setSenderMsg('');
-        console.log(res);
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ...formData, turnstileToken }),
       });
 
-      // const responseMessage = await response.json();
+      const result = await response.json();
 
-      // const statusError = getStatusError({
-      //   status: response?.status,
-      //   errorMessage: responseMessage?.error,
-      //   fallback: 'There was a problem sending your message',
-      // });
-
-      // if (statusError) throw new Error(statusError);
-
-      setComplete(true);
-      setSending(false);
+      if (response.ok) {
+        setComplete(true);
+        setFormData({ name: '', email: '', subject: '', message: '' });
+        setStatus('Message sent successfully!');
+      } else {
+        setStatus(`Error: ${result.error}`);
+      }
     } catch (error) {
-      // setSending(false);
-      // setStatusError(error.message);
+      setStatus(`Error: ${error.message}`);
+    } finally {
+      setSending(false);
     }
   };
 
+  const handleNameChange = e => {
+    setFormData(prev => ({ ...prev, name: e.target.value }));
+  };
+  const handleSubjectChange = e => {
+    setFormData(prev => ({ ...prev, subject: e.target.value }));
+  };
+  const handleEmailChange = e => {
+    setFormData(prev => ({ ...prev, email: e.target.value }));
+  };
+  const handleMessageChange = e => {
+    setFormData(prev => ({ ...prev, message: e.target.value }));
+  };
+
   return (
-    <Section className={styles.contact}>
+    <Section id="contact" className={styles.contact}>
       <Meta
         title="Contact"
-        description="You aren't supposed to see this page, it's in wip, :)"
+        description="Reach out to us for inquiries, collaborations, or support."
       />
       <Transition unmount in={!complete} timeout={1600}>
         {(visible, status) => (
@@ -87,11 +181,7 @@ export const Contact = () => {
               as="h1"
               style={getDelay(tokens.base.durationXS, initDelay, 0.3)}
             >
-              <DecoderText
-                text="You aren't supposed to see this page, it's in wip, :)"
-                start={status !== 'exited'}
-                delay={300}
-              />
+              <DecoderText text="Get in Touch" start={status !== 'exited'} delay={300} />
             </Heading>
             <Divider
               className={styles.divider}
@@ -102,44 +192,63 @@ export const Contact = () => {
               required
               className={styles.input}
               data-status={status}
-              name="user_email"
+              name="name"
               style={getDelay(tokens.base.durationXS, initDelay)}
+              autoComplete="name"
+              label="Your Name"
+              type="text"
+              maxLength={100}
+              value={formData.name}
+              onChange={handleNameChange}
+            />
+            <Input
+              required
+              className={styles.input}
+              data-status={status}
+              name="subject"
+              style={getDelay(tokens.base.durationXS, initDelay, 0.05)}
+              autoComplete="off"
+              label="Subject"
+              type="text"
+              maxLength={200}
+              value={formData.subject}
+              onChange={handleSubjectChange}
+            />
+            <Input
+              required
+              className={styles.input}
+              data-status={status}
+              name="email"
+              style={getDelay(tokens.base.durationS, initDelay, 0.1)}
               autoComplete="email"
               label="Your Email"
               type="email"
               maxLength={512}
-              {...email}
+              value={formData.email}
+              onChange={handleEmailChange}
             />
             <Input
               required
               multiline
               className={styles.input}
               data-status={status}
-              style={getDelay(tokens.base.durationS, initDelay)}
+              style={getDelay(tokens.base.durationS, initDelay, 0.2)}
               autoComplete="off"
               label="Message"
               name="message"
               maxLength={4096}
-              {...message}
+              value={formData.message}
+              onChange={handleMessageChange}
             />
-            {/* <Transition in={statusError} timeout={msToNum(tokens.base.durationM)}>
-              {errorStatus => (
-                <div
-                  className={styles.formError}
-                  data-status={errorStatus}
-                  style={cssProps({
-                    height: errorStatus ? errorRef.current?.offsetHeight : 0,
-                  })}
-                >
-                  <div className={styles.formErrorContent} ref={errorRef}>
-                    <div className={styles.formErrorMessage}>
-                      <Icon className={styles.formErrorIcon} icon="error" />
-                      {statusError}
-                    </div>
-                  </div>
-                </div>
-              )}
-            </Transition> */}
+            <br />
+            <br />
+            <div
+              ref={turnstileRef}
+              data-turnstile="true"
+              data-sitekey={
+                process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || '0x4AAAAAAB4knujxF877PWoI'
+              }
+            />
             <Button
               className={styles.button}
               data-status={status}
@@ -174,45 +283,14 @@ export const Contact = () => {
               data-status={status}
               style={getDelay(tokens.base.durationXS)}
             >
-              I’ll get back to you within a couple days, sit tight
+              Thank you for reaching out! We'll get back to you as soon as possible.
             </Text>
-            <Button
-              secondary
-              iconHoverShift
-              className={styles.completeButton}
-              data-status={status}
-              style={getDelay(tokens.base.durationM)}
-              href="/"
-              icon="chevronRight"
-            >
-              Back to homepage
-            </Button>
           </div>
         )}
       </Transition>
-      <Footer className={styles.footer} />
     </Section>
   );
 };
-
-// function getStatusError({
-//   status,
-//   errorMessage,
-//   fallback = 'There was a problem with your request',
-// }) {
-//   if (status === 200) return false;
-
-//   const statuses = {
-//     500: 'There was a problem with the server, try again later',
-//     404: 'There was a problem connecting to the server. Make sure you are connected to the internet',
-//   };
-
-//   if (errorMessage) {
-//     return errorMessage;
-//   }
-
-//   return statuses[status] || fallback;
-// }
 
 function getDelay(delayMs, offset = numToMs(0), multiplier = 1) {
   const numDelay = msToNum(delayMs) * multiplier;
