@@ -71,12 +71,13 @@
 
     &:hover {
       transform: none;
-      background: transparent;
+      background: transparent; /* keep transparent on hover */
     }
 
+    /* Maintain transparent background on hover; prevent fill animation */
     &:hover::after {
-      transform: scale3d(1, 1, 1);
-      transform-origin: left;
+      transform: scale3d(0, 1, 1); /* keep hidden */
+      background-color: transparent; /* ensure no tint */
     }
 
     &[data-icon='chevronRight'] {
@@ -166,12 +167,18 @@
   }
 
   @media (--mediaUseMotion) {
-    @nest .button:hover &[data-shift='true'] {
+    .button:hover &[data-shift='true'] {
       transform: translate3d(var(--spaceXS), 0, 0);
     }
   }
 
-  @nest .button[data-loading='true'] & {
+  .button[data-loading='true'] & {
     opacity: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .button[data-secondary='true'] {
+    margin-top: 1rem; /* Add spacing below secondary buttons */
   }
 }
