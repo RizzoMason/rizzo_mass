@@ -19,7 +19,7 @@ export const Meta = ({ title, description, prefix = name, ogImage = defaultOgIma
       <meta property="og:image:width" content="1280" />
       <meta property="og:image:height" content="675" />
 
-      <meta property="og:title" content="Rami Badr | Portfolio />
+      <meta property="og:title" content="Rami Badr | Portfolio" />
       <meta property="og:site_name" content={name} />
       <meta property="og:type" content="website" />
       <meta property="og:url" content="https://badr.lol" />
