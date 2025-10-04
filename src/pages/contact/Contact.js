@@ -167,10 +167,6 @@ export const Contact = () => {
 
   return (
     <Section id="contact" className={styles.contact}>
-      <Meta
-        title="Contact"
-        description="Reach out to us for inquiries, collaborations, or support."
-      />
       <Transition unmount in={!complete} timeout={1600}>
         {(visible, status) => (
           <form className={styles.form} ref={form} onSubmit={onSubmit}>
