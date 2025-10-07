@@ -77,7 +77,7 @@ export const Home = () => {
       </Helmet>
       <Meta
         title="Developer + Producer"
-        description="Welcome to Rami Badr's Portfolio."
+        description="Welcome to my portfolio."
       />
       <Intro
         id="intro"
