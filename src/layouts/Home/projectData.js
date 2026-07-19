@@ -91,21 +91,23 @@ export const projects = [
   },
   {
     title: 'Steady',
-    tagline: 'Calm Habit Tracker',
+    tagline: 'Habit Tracker',
     slug: 'steady',
     description:
       'A calm habit tracker focused on streaks, reflection, and consistency without the noise.',
     roles: ['Habit Tracking', 'Streaks', 'Calm UX'],
-    url: 'https://buildfast.us/',
+    url: 'https://steady.buildfast.us',
+    image: '/static/steady.png',
   },
   {
     title: 'Paperstack',
-    tagline: 'SaaS Foundation',
+    tagline: 'SaaS Boilerplate',
     slug: 'paperstack',
     description:
       'A SaaS foundation with the auth, billing, and dashboard primitives every product needs to launch.',
     roles: ['Auth & Billing', 'Dashboard', 'SaaS Starter'],
-    url: 'https://buildfast.us/',
+    url: 'https://paperstack.buildfast.us',
+    image: '/static/paperstack.png',
   },
 ];
 

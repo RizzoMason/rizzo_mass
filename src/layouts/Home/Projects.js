@@ -11,11 +11,54 @@ import styles from './Projects.module.css';
 
 const galleryProjects = projects.filter(project => project.image);
 
+/** Pack tiles into full 12-col rows: 8+4, 4+4+4, 4+8. Remainder becomes half/half or full. */
+function getGallerySpans(count) {
+  const spans = [];
+  let i = 0;
+  let rowType = 0;
+
+  while (i < count) {
+    const remaining = count - i;
+
+    if (remaining === 1) {
+      spans.push('full');
+      break;
+    }
+
+    if (remaining === 2) {
+      spans.push('half', 'half');
+      break;
+    }
+
+    if (rowType === 0) {
+      spans.push('wide', 'normal');
+      i += 2;
+    } else if (rowType === 1) {
+      if (remaining >= 3) {
+        spans.push('normal', 'normal', 'normal');
+        i += 3;
+      } else {
+        spans.push('half', 'half');
+        i += 2;
+      }
+    } else {
+      spans.push('normal', 'wide');
+      i += 2;
+    }
+
+    rowType = (rowType + 1) % 3;
+  }
+
+  return spans;
+}
+
+const gallerySpans = getGallerySpans(galleryProjects.length);
+
 function isExternalLink(href) {
   return href?.includes('://');
 }
 
-function ProjectTile({ project, index, visible }) {
+function ProjectTile({ project, index, visible, span }) {
   const href = `/projects/${project.slug}`;
   const content = (
     <>
@@ -34,21 +77,16 @@ function ProjectTile({ project, index, visible }) {
     </>
   );
 
+  const sharedProps = {
+    className: styles.tile,
+    'data-visible': visible,
+    'data-span': span,
+    style: { '--delay': `${index * 70 + 280}ms` },
+  };
+
   if (isExternalLink(href)) {
     return (
-      <a
-        className={styles.tile}
-        href={href}
-        data-visible={visible}
-        style={{ '--delay': `${index * 70 + 280}ms` }}
-        data-span={
-          index === galleryProjects.length - 1
-            ? 'full'
-            : index % 5 === 0 || index % 5 === 3
-              ? 'wide'
-              : 'normal'
-        }
-      >
+      <a {...sharedProps} href={href}>
         {content}
       </a>
     );
@@ -56,20 +94,7 @@ function ProjectTile({ project, index, visible }) {
 
   return (
     <RouterLink href={href} passHref scroll={false}>
-      <a
-        className={styles.tile}
-        data-visible={visible}
-        style={{ '--delay': `${index * 70 + 280}ms` }}
-        data-span={
-          index === galleryProjects.length - 1
-            ? 'full'
-            : index % 5 === 0 || index % 5 === 3
-              ? 'wide'
-              : 'normal'
-        }
-      >
-        {content}
-      </a>
+      <a {...sharedProps}>{content}</a>
     </RouterLink>
   );
 }
@@ -124,6 +149,7 @@ export const Projects = ({ id, visible, sectionRef }) => {
                   project={project}
                   index={index}
                   visible={visible}
+                  span={gallerySpans[index]}
                 />
               ))}
             </div>
