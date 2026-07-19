@@ -17,6 +17,7 @@ import { Footer } from 'components/Footer';
 import { Meta } from 'components/Meta';
 import { Intro } from 'layouts/Home/Intro';
 import { Profile } from 'layouts/Home/Profile';
+import { Projects } from 'layouts/Home/Projects';
 import { ProjectSummary } from 'layouts/Home/ProjectSummary';
 import { useEffect, useRef, useState } from 'react';
 import styles from './Home.module.css';
@@ -32,10 +33,18 @@ export const Home = () => {
   const projectOne = useRef();
   const projectTwo = useRef();
   const projectThree = useRef();
+  const projectArchive = useRef();
   const details = useRef();
 
   useEffect(() => {
-    const sections = [intro, projectOne, projectTwo, projectThree, details];
+    const sections = [
+      intro,
+      projectOne,
+      projectTwo,
+      projectThree,
+      projectArchive,
+      details,
+    ];
 
     const sectionObserver = new IntersectionObserver(
       (entries, observer) => {
@@ -89,9 +98,9 @@ export const Home = () => {
         id="project-3"
         sectionRef={projectThree}
         visible={visibleSections.includes(projectThree.current)}
-        index={1} // Updated index
+        index={1}
         title="BuildFast"
-        description="Turn your idea into a market-ready product in weeks."
+        description="Build faster today. Turn your idea into a market-ready product in weeks."
         buttonText="View website"
         buttonLink="https://buildfast.us/"
         model={{
@@ -109,9 +118,9 @@ export const Home = () => {
         id="project-1"
         sectionRef={projectOne}
         visible={visibleSections.includes(projectOne.current)}
-        index={2} // Updated index
+        index={2}
         title="Astra Voice"
-        description="Building the future of customer support & it speaks your language."
+        description="AI voice assistant. Building the future of customer support that speaks your language."
         buttonText="Learn More"
         buttonLink="/projects/astra-voice"
         secondaryButtonText="View Article"
@@ -132,9 +141,9 @@ export const Home = () => {
         alternate
         sectionRef={projectTwo}
         visible={visibleSections.includes(projectTwo.current)}
-        index={3} // Updated index
+        index={3}
         title="Plethora"
-        description="Turn audio & videos into notes,\nflashcards, quizzes, conversations and more."
+        description="Education companion. Turn audio and videos into notes, flashcards, quizzes, and more."
         buttonText="Learn More"
         buttonLink="/projects/plethora"
         model={{
@@ -151,6 +160,11 @@ export const Home = () => {
             },
           ],
         }}
+      />
+      <Projects
+        id="projects"
+        sectionRef={projectArchive}
+        visible={visibleSections.includes(projectArchive.current)}
       />
       <section id="details" className={styles.detailsAnchor} />
       <div className={styles.profileOverlapWrapper}>

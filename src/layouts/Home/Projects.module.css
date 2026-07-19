@@ -1,0 +1,321 @@
+.projects {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding-top: var(--space4XL);
+  padding-bottom: var(--space5XL);
+  display: flex;
+  justify-content: center;
+  overflow-x: clip;
+
+  @media (--mediaTablet) {
+    padding-top: var(--space3XL);
+    padding-bottom: var(--space4XL);
+  }
+
+  @media (--mediaMobile) {
+    padding-top: var(--space3XL);
+    padding-bottom: var(--space3XL);
+  }
+}
+
+.content {
+  max-width: var(--maxWidthXL);
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.header {
+  margin-bottom: var(--space3XL);
+  max-width: 760px;
+
+  @media (--mediaMobile) {
+    margin-bottom: var(--space2XL);
+  }
+}
+
+.index {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: var(--spaceL);
+
+  @media (--mediaMobile) {
+    grid-template-columns: 64px 1fr;
+    gap: 8px;
+  }
+}
+
+.indexNumber {
+  color: var(--colorTextBody);
+  font-size: var(--fontSizeBodyS);
+  font-weight: var(--fontWeightMedium);
+  opacity: 0;
+  transition: opacity var(--durationM) ease 1.3s;
+
+  &[data-visible='true'] {
+    opacity: 1;
+  }
+}
+
+.title {
+  margin-bottom: var(--spaceL);
+  opacity: 0;
+  transition: opacity var(--durationXL) ease var(--durationM);
+
+  &[data-visible='true'] {
+    opacity: 1;
+  }
+}
+
+.description {
+  opacity: 0;
+  margin-bottom: var(--space2XL);
+  transition: opacity var(--durationXL) ease var(--durationL);
+
+  &[data-visible='true'] {
+    opacity: 1;
+  }
+
+  @media (--mediaMobile) {
+    margin-bottom: var(--spaceXL);
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 18px;
+  width: 100%;
+  min-width: 0;
+
+  @media (--mediaLaptop) {
+    gap: 16px;
+  }
+
+  @media (--mediaTablet) {
+    grid-template-columns: repeat(6, 1fr);
+    gap: 14px;
+  }
+
+  @media (--mediaMobile) {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+
+.tile {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  min-height: 320px;
+  width: 100%;
+  min-width: 0;
+  text-decoration: none;
+  color: rgb(var(--rgbWhite));
+  background: rgb(var(--rgbBackgroundLight));
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%);
+  opacity: 0;
+  transform: translate3d(0, 18px, 0);
+  transition-property: opacity, transform;
+  transition-duration: var(--durationL);
+  transition-timing-function: var(--bezierFastoutSlowin);
+  transition-delay: var(--delay);
+  grid-column: span 4;
+  -webkit-tap-highlight-color: transparent;
+
+  &[data-span='wide'] {
+    grid-column: span 8;
+    min-height: 380px;
+  }
+
+  &[data-span='full'] {
+    grid-column: 1 / -1;
+    min-height: 360px;
+  }
+
+  &[data-visible='true'] {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (--mediaLaptop) {
+    min-height: 280px;
+
+    &[data-span='wide'] {
+      min-height: 340px;
+    }
+
+    &[data-span='full'] {
+      min-height: 320px;
+    }
+  }
+
+  @media (--mediaTablet) {
+    grid-column: span 3;
+    min-height: 240px;
+
+    &[data-span='wide'] {
+      grid-column: span 6;
+      min-height: 280px;
+    }
+
+    &[data-span='full'] {
+      grid-column: 1 / -1;
+      min-height: 260px;
+    }
+  }
+
+  @media (--mediaMobile) {
+    grid-column: 1 / -1;
+    min-height: 200px;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%);
+
+    &[data-span='wide'],
+    &[data-span='full'] {
+      grid-column: 1 / -1;
+      min-height: 200px;
+    }
+  }
+
+  @media (--mediaMobileS) {
+    min-height: 180px;
+
+    &[data-span='wide'],
+    &[data-span='full'] {
+      min-height: 180px;
+    }
+  }
+
+  @media (--mediaUseMotion) {
+    &:hover .tileMedia img,
+    &:focus-visible .tileMedia img {
+      transform: scale(1.05);
+    }
+
+    &:hover .tileScrim,
+    &:focus-visible .tileScrim {
+      opacity: 1;
+    }
+
+    &:hover .tileArrow,
+    &:focus-visible .tileArrow {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  /* Always show affordance on touch / coarse pointers */
+  @media (hover: none), (--mediaMobile) {
+    & .tileArrow {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
+.tileMedia {
+  position: absolute;
+  inset: 0;
+
+  & img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    display: block;
+    transition: transform 700ms var(--bezierFastoutSlowin);
+  }
+}
+
+.tileScrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgb(0 0 0 / 0.02) 0%,
+    rgb(0 0 0 / 0.12) 45%,
+    rgb(0 0 0 / 0.78) 100%
+  );
+  opacity: 0.9;
+  transition: opacity var(--durationM) ease;
+}
+
+.tileMeta {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  display: grid;
+  gap: 6px;
+  padding: 28px 28px 32px;
+  max-width: 100%;
+  box-sizing: border-box;
+
+  @media (--mediaMobile) {
+    gap: 4px;
+    padding: 18px 18px 22px;
+    padding-right: 64px;
+  }
+}
+
+.tileIndex {
+  font-size: 12px;
+  font-weight: var(--fontWeightMedium);
+  letter-spacing: 0.14em;
+  color: rgb(var(--rgbPrimary));
+  font-variant-numeric: tabular-nums;
+}
+
+.tileTitle {
+  font-size: var(--fontSizeH4);
+  font-weight: var(--fontWeightMedium);
+  letter-spacing: -0.02em;
+  color: rgb(var(--rgbWhite));
+  overflow-wrap: anywhere;
+
+  @media (--mediaMobile) {
+    font-size: var(--fontSizeH5);
+  }
+}
+
+.tileTagline {
+  font-size: var(--fontSizeBodyM);
+  color: rgb(255 255 255 / 0.72);
+  overflow-wrap: anywhere;
+
+  @media (--mediaMobile) {
+    font-size: var(--fontSizeBodyS);
+  }
+}
+
+.tileArrow {
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  z-index: 1;
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  font-size: 20px;
+  color: rgb(var(--rgbBlack));
+  background: rgb(var(--rgbPrimary));
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%);
+  opacity: 0;
+  transform: translate3d(8px, -8px, 0);
+  transition-property: opacity, transform;
+  transition-duration: var(--durationM);
+  transition-timing-function: var(--bezierFastoutSlowin);
+
+  @media (--mediaMobile) {
+    top: 16px;
+    right: 16px;
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+  }
+}

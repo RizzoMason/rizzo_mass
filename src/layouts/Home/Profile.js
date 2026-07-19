@@ -1,9 +1,4 @@
 import profileKatakana from 'assets/katakana-profile.svg?url';
-
-import profileImgLarge from 'assets/badr.jpg';
-import profileImgPlaceholder from 'assets/badr.jpg';
-import profileImg from 'assets/badr.jpg';
-
 import { Button } from 'components/Button';
 import { DecoderText } from 'components/DecoderText';
 import { Divider } from 'components/Divider';
@@ -17,24 +12,24 @@ import { Fragment, useState } from 'react';
 import { media } from 'utils/style';
 import styles from './Profile.module.css';
 
+const profileImg = { src: '/static/rami.png' };
+
 const ProfileText = ({ visible, titleId }) => (
   <Fragment>
     <Heading className={styles.title} data-visible={visible} level={3} id={titleId}>
       <DecoderText text="Who ?" start={visible} delay={500} />
     </Heading>
     <Text className={styles.description} data-visible={visible} size="l" as="p">
-      I'm Badr, a driven entrepreneur, music producer, and developer who turns ambitious
-      visions into reality. My specialty? Helping businesses get their idea to market fast
-      and efficiently.
+      I&apos;m Rami. I run <Link href="https://buildfast.us/">BuildFast</Link>, where I build
+      MVPs and web apps for non-technical founders to get to market.
     </Text>
     <Text className={styles.description} data-visible={visible} size="l" as="p">
-      When I'm not building the next big thing, I'm either on the field or in the pool. I
-      also produce beats from time to time, because excellence isn't limited to one
-      domain.
+      I&apos;ve shipped products across fitness, social, and AI tooling, including{' '}
+      <Link href="/projects/astra-voice">Astra Voice</Link>, AutoCall, and Wavelens. I work
+      directly with founders from scoping to shipping, in weeks not months.
     </Text>
     <Text className={styles.description} data-visible={visible} size="l" as="p">
-      Ready to work with someone who delivers results? Let's connect and create something
-      great together.
+      If you have an idea and need someone who can actually build it, let&apos;s talk.
     </Text>
   </Fragment>
 );
@@ -58,6 +53,24 @@ export const Profile = ({ id, visible, sectionRef }) => {
           <div className={styles.content}>
             <div className={styles.column}>
               <ProfileText visible={visible} titleId={titleId} />
+              <div className={styles.actions} data-visible={visible}>
+                <Button
+                  secondary
+                  iconHoverShift
+                  href="https://www.linkedin.com/in/ramibadr/"
+                  icon="linkedin"
+                >
+                  View LinkedIn
+                </Button>
+                <Button
+                  secondary
+                  iconHoverShift
+                  href="https://github.com/bxdr-glitch"
+                  icon="github"
+                >
+                  View GitHub
+                </Button>
+              </div>
             </div>
             <div className={styles.column}>
               <div className={styles.tag} aria-hidden>
@@ -72,6 +85,14 @@ export const Profile = ({ id, visible, sectionRef }) => {
                 </div>
               </div>
               <div className={styles.image}>
+                <Image
+                  reveal
+                  delay={100}
+                  placeholder={profileImg}
+                  srcSet={[profileImg, profileImg]}
+                  sizes={`(max-width: ${media.mobile}px) 100vw, 480px`}
+                  alt="Rami Badr"
+                />
                 <svg
                   aria-hidden="true"
                   width="135"
